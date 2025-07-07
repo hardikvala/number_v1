@@ -99,3 +99,18 @@ restartBtn.addEventListener("click", () => {
 // Init
 instruction.dataset.reset = instruction.textContent;
 setNewNumbers();
+
+restartBtn.addEventListener("click", () => {
+  level = 1;
+  score = 0;
+  totalQuestions = 0;
+
+  levelInfo.style.display = "block";
+  leftBtn.style.display = "inline-block";
+  rightBtn.style.display = "inline-block";
+  nextBtn.style.display = "none";
+
+  instruction.textContent = "Which number is BIGGER?";
+  levelInfo.textContent = "Level " + level;
+  setNewNumbers();
+});
