@@ -13,6 +13,7 @@ const wrongSound = document.getElementById("wrong-sound");
 let level = 1;
 let score = 0;
 let totalQuestions = 0;
+let correct = "";
 
 function getNumberRange(level) {
   if (level <= 3) return 20;
@@ -42,41 +43,34 @@ function setNewNumbers() {
   rightBtn.disabled = false;
 
   let [num1, num2] = generateNumbers();
-  let correct = num1 > num2 ? "left" : "right";
+  correct = num1 > num2 ? 'left' : 'right';
 
   leftBtn.textContent = num1;
   rightBtn.textContent = num2;
-
-  function handleClick(side) {
-    if (side === correct) {
-      feedback.textContent = "🎉 Yay! That's right!";
-      feedback.style.color = "green";
-      correctSound.play();
-      score++;
-    } else {
-      feedback.textContent = "😢 Oops! Try next one!";
-      feedback.style.color = "red";
-      wrongSound.play();
-    }
-
-    totalQuestions++;
-    leftBtn.disabled = true;
-    rightBtn.disabled = true;
-    nextBtn.style.display = "inline-block";
-    level++;
-    levelInfo.textContent = "Level " + level;
-
-    leftBtn.removeEventListener("click", leftListener);
-    rightBtn.removeEventListener("click", rightListener);
-  }
-
-  function leftListener() { handleClick("left"); }
-  function rightListener() { handleClick("right"); }
-
-  leftBtn.addEventListener("click", leftListener);
-  rightBtn.addEventListener("click", rightListener);
 }
 
+function checkAnswer(side) {
+  if (side === correct) {
+    feedback.textContent = "🎉 Yay! That's right!";
+    feedback.style.color = "green";
+    correctSound.play();
+    score++;
+  } else {
+    feedback.textContent = "😢 Oops! Try next one!";
+    feedback.style.color = "red";
+    wrongSound.play();
+  }
+
+  totalQuestions++;
+  leftBtn.disabled = true;
+  rightBtn.disabled = true;
+  nextBtn.style.display = "inline-block";
+  level++;
+  levelInfo.textContent = "Level " + level;
+}
+
+leftBtn.addEventListener("click", () => checkAnswer("left"));
+rightBtn.addEventListener("click", () => checkAnswer("right"));
 nextBtn.addEventListener("click", setNewNumbers);
 
 function showFinalScore() {
@@ -97,10 +91,11 @@ restartBtn.addEventListener("click", () => {
   rightBtn.style.display = "inline-block";
   nextBtn.style.display = "none";
 
-  instruction.textContent = "Tap the BIGGER number!";
+  instruction.textContent = instruction.dataset.reset;
   levelInfo.textContent = "Level " + level;
   setNewNumbers();
 });
 
-// Initialize game
+// Init
+instruction.dataset.reset = instruction.textContent;
 setNewNumbers();
