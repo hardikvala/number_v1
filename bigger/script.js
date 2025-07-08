@@ -43,10 +43,18 @@ function setNewNumbers() {
   rightBtn.disabled = false;
 
   let [num1, num2] = generateNumbers();
-  correct = num1 > num2 ? 'left' : 'right';
 
-  leftBtn.textContent = num1;
-  rightBtn.textContent = num2;
+  // Randomize button positions
+  if (Math.random() < 0.5) {
+    leftBtn.textContent = num1;
+    rightBtn.textContent = num2;
+  } else {
+    leftBtn.textContent = num2;
+    rightBtn.textContent = num1;
+  }
+
+  // Determine which button has the larger number
+  correct = parseInt(leftBtn.textContent) > parseInt(rightBtn.textContent) ? 'left' : 'right';
 }
 
 function checkAnswer(side) {
@@ -73,14 +81,6 @@ leftBtn.addEventListener("click", () => checkAnswer("left"));
 rightBtn.addEventListener("click", () => checkAnswer("right"));
 nextBtn.addEventListener("click", setNewNumbers);
 
-function showFinalScore() {
-  instruction.textContent = "🎉 You got " + score + " out of 10 correct!";
-  levelInfo.style.display = "none";
-  leftBtn.style.display = "none";
-  rightBtn.style.display = "none";
-  nextBtn.style.display = "none";
-}
-
 restartBtn.addEventListener("click", () => {
   level = 1;
   score = 0;
@@ -91,7 +91,7 @@ restartBtn.addEventListener("click", () => {
   rightBtn.style.display = "inline-block";
   nextBtn.style.display = "none";
 
-  instruction.textContent = instruction.dataset.reset;
+  instruction.textContent = instruction.dataset.reset || "Which number is BIGGER?";
   levelInfo.textContent = "Level " + level;
   setNewNumbers();
 });
@@ -99,18 +99,3 @@ restartBtn.addEventListener("click", () => {
 // Init
 instruction.dataset.reset = instruction.textContent;
 setNewNumbers();
-
-restartBtn.addEventListener("click", () => {
-  level = 1;
-  score = 0;
-  totalQuestions = 0;
-
-  levelInfo.style.display = "block";
-  leftBtn.style.display = "inline-block";
-  rightBtn.style.display = "inline-block";
-  nextBtn.style.display = "none";
-
-  instruction.textContent = "Which number is BIGGER?";
-  levelInfo.textContent = "Level " + level;
-  setNewNumbers();
-});
