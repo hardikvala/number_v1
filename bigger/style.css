@@ -1,0 +1,52 @@
+
+body {
+  font-family: 'Comic Sans MS', sans-serif;
+  background: #dfffe0;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.game-container {
+  padding: 20px;
+}
+
+h1 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+#instruction {
+  font-size: 1.5em;
+  margin: 10px;
+}
+
+.number-buttons {
+  margin: 20px;
+}
+
+.number-buttons button {
+  font-size: 2em;
+  margin: 10px;
+  padding: 20px;
+  border: none;
+  background: #ffeb99;
+  border-radius: 10px;
+  box-shadow: 2px 2px 6px #999;
+}
+
+#feedback {
+  font-size: 1.2em;
+  margin-top: 15px;
+  height: 30px;
+}
+
+#next-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1em;
+  background: #a2f0a2;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
