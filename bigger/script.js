@@ -13,12 +13,13 @@ const wrongSound = document.getElementById("wrong-sound");
 let level = 1;
 let score = 0;
 let totalQuestions = 0;
-let correct = "";
+let leftNumber = 0;
+let rightNumber = 0;
 
 function getNumberRange(level) {
-  if (level <= 3) return 20;
-  if (level <= 6) return 50;
-  return 100;
+  if (level <= 3) return 50;
+  if (level <= 6) return 100;
+  return 200;
 }
 
 function generateNumbers() {
@@ -44,21 +45,23 @@ function setNewNumbers() {
 
   let [num1, num2] = generateNumbers();
 
-  // Randomize button positions
   if (Math.random() < 0.5) {
-    leftBtn.textContent = num1;
-    rightBtn.textContent = num2;
+    leftNumber = num1;
+    rightNumber = num2;
   } else {
-    leftBtn.textContent = num2;
-    rightBtn.textContent = num1;
+    leftNumber = num2;
+    rightNumber = num1;
   }
 
-  // Determine which button has the larger number
-  correct = parseInt(leftBtn.textContent) > parseInt(rightBtn.textContent) ? 'left' : 'right';
+  leftBtn.textContent = leftNumber;
+  rightBtn.textContent = rightNumber;
 }
 
 function checkAnswer(side) {
-  if (side === correct) {
+  const chosen = side === "left" ? leftNumber : rightNumber;
+  const other = side === "left" ? rightNumber : leftNumber;
+
+  if (chosen > other) {
     feedback.textContent = "🎉 Yay! That's right!";
     feedback.style.color = "green";
     correctSound.play();
