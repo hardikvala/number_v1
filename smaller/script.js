@@ -13,13 +13,11 @@ const wrongSound = document.getElementById("wrong-sound");
 let level = 1;
 let score = 0;
 let totalQuestions = 0;
-let leftNumber = 0;
-let rightNumber = 0;
 
 function getNumberRange(level) {
-  if (level <= 3) return 50;
-  if (level <= 6) return 100;
-  return 200;
+  if (level <= 3) return 20;
+  if (level <= 6) return 50;
+  return 100;
 }
 
 function generateNumbers() {
@@ -44,46 +42,50 @@ function setNewNumbers() {
   rightBtn.disabled = false;
 
   let [num1, num2] = generateNumbers();
+  let correct = num1 < num2 ? "left" : "right";
 
-  if (Math.random() < 0.5) {
-    leftNumber = num1;
-    rightNumber = num2;
-  } else {
-    leftNumber = num2;
-    rightNumber = num1;
+  leftBtn.textContent = num1;
+  rightBtn.textContent = num2;
+
+  function handleClick(side) {
+    if (side === correct) {
+      feedback.textContent = "🎉 Yay! That's right!";
+      feedback.style.color = "green";
+      correctSound.play();
+      score++;
+    } else {
+      feedback.textContent = "😢 Oops! Try next one!";
+      feedback.style.color = "red";
+      wrongSound.play();
+    }
+
+    totalQuestions++;
+    leftBtn.disabled = true;
+    rightBtn.disabled = true;
+    nextBtn.style.display = "inline-block";
+    level++;
+    levelInfo.textContent = "Level " + level;
+
+    leftBtn.removeEventListener("click", leftListener);
+    rightBtn.removeEventListener("click", rightListener);
   }
 
-  leftBtn.textContent = leftNumber;
-  rightBtn.textContent = rightNumber;
+  function leftListener() { handleClick("left"); }
+  function rightListener() { handleClick("right"); }
+
+  leftBtn.addEventListener("click", leftListener);
+  rightBtn.addEventListener("click", rightListener);
 }
 
-function checkAnswer(side, compare = "bigger") {
-  const chosen = side === "left" ? leftNumber : rightNumber;
-  const other = side === "left" ? rightNumber : leftNumber;
-  const isCorrect = compare === "bigger" ? (chosen > other) : (chosen < other);
-
-  if (isCorrect) {
-    feedback.textContent = "🎉 Yay! That's right!";
-    feedback.style.color = "green";
-    correctSound.play();
-    score++;
-  } else {
-    feedback.textContent = "😢 Oops! Try next one!";
-    feedback.style.color = "red";
-    wrongSound.play();
-  }
-
-  totalQuestions++;
-  leftBtn.disabled = true;
-  rightBtn.disabled = true;
-  nextBtn.style.display = "inline-block";
-  level++;
-  levelInfo.textContent = "Level " + level;
-}
-
-leftBtn.addEventListener("click", () => checkAnswer("left", instruction.dataset.compare));
-rightBtn.addEventListener("click", () => checkAnswer("right", instruction.dataset.compare));
 nextBtn.addEventListener("click", setNewNumbers);
+
+function showFinalScore() {
+  instruction.textContent = "🎉 You got " + score + " out of 10 correct!";
+  levelInfo.style.display = "none";
+  leftBtn.style.display = "none";
+  rightBtn.style.display = "none";
+  nextBtn.style.display = "none";
+}
 
 restartBtn.addEventListener("click", () => {
   level = 1;
@@ -95,12 +97,9 @@ restartBtn.addEventListener("click", () => {
   rightBtn.style.display = "inline-block";
   nextBtn.style.display = "none";
 
-  instruction.textContent = instruction.dataset.reset;
+  instruction.textContent = "Tap the SMALLER number!";
   levelInfo.textContent = "Level " + level;
   setNewNumbers();
 });
 
-// Init
-instruction.dataset.reset = instruction.textContent;
-instruction.dataset.compare = instruction.textContent.toLowerCase().includes("smaller") ? "smaller" : "bigger";
 setNewNumbers();
